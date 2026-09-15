@@ -24,23 +24,24 @@ function App() {
     const handleAddTask = (title:string, dueDate:string, priority: 'LOW' | 'MEDIUM' | 'HIGH') => {
           axios.post(API, {title, dueDate, priority}).then(response => setTasks([...tasks, response.data]))
     }
-    /*const handleUpdateTitle = (taskId: number, updatedTitle: string) => {
-      axios.put(`${API}/${taskId}`, {title: updatedTitle}).then(() => setTasks(tasks.map(t => t.taskId === taskId ? {...t, title: updatedTitle} : t)))
+    const handleUpdateTask = (taskId: number, updates: { title?: string; dueDate?: string; priority?: 'LOW' | 'MEDIUM' | 'HIGH'}) => {
+      axios.patch(`${API}/${taskId}`, updates).then(response => setTasks(tasks.map(t => t.taskId === taskId ? response.data : t)))
+          .catch(error => console.error(error))
     }
-    const handleUpdatePriority = (taskId: number, updatedPriority: 'LOW' | 'MEDIUM' | 'HIGH') => {
-      axios.put(`${API}/${taskId}`, {priority: updatedPriority}).then(() => setTasks(tasks.map(t => t.taskId === taskId ? {...t, priority: updatedPriority} : t)))
-    }
-    const handleUpdateDueDate = (taskId: number, updatedDueDate: string) => {
-      axios.put(`${API}/${taskId}`, {dueDate: updatedDueDate}).then(() => setTasks(tasks.map(t => t.taskId === taskId ? {...t, dueDate: updatedDueDate} : t)))
-    }®
-*/
-  return (
-      <div>
-        <h1>Task Manager</h1>
-          <AddTaskForm onAdd = {handleAddTask}/>
-          <TaskList tasks={tasks} onDelete={handleDelete} onToggle={handleToggle}/>
-      </div>
-  )
+
+    return (
+        <div className="min-h-screen bg-gray-950 text-white p-8">
+            <div className="max-w-2xl mx-auto">
+                <h1 className="text-3xl font-bold mb-8 text-center">Task Manager</h1>
+                <AddTaskForm onAdd={handleAddTask}/>
+                <TaskList tasks={tasks}
+                          onDelete={handleDelete}
+                          onToggle={handleToggle}
+                          onUpdateTask={handleUpdateTask}
+                />
+            </div>
+        </div>
+    )
 }
 
 
