@@ -1,11 +1,12 @@
     import { useState } from 'react'
     import type {Task} from "../types.ts";
+    import type { TaskUpdate} from "../types.ts";
 
     interface TaskCardProps {
         task: Task
         onDelete: (taskId: number) => void
         onToggle: (taskId: number) => void
-        onUpdateTask: (taskId: number, updates: { title?: string; dueDate?: string; priority?: 'LOW' | 'MEDIUM' | 'HIGH'}) => void
+        onUpdateTask: (taskId: number, updates: TaskUpdate) => void
     }
 
     function TaskCard({ task, onDelete, onToggle, onUpdateTask }: TaskCardProps) {
@@ -13,9 +14,15 @@
         const [editTitle, setEditTitle] = useState(task.title)
         const [editDueDate, setEditDueDate] = useState(task.dueDate)
         const [editPriority, setEditPriority] = useState(task.priority)
+        const [error, setError] = useState('')
 
         const handleSave = () => {
-            onUpdateTask(task.taskId, {title:editTitle, dueDate:editDueDate, priority:editPriority})
+            if (!editTitle.trim()) {
+                setError("Title cannot be empty")
+                return
+            }
+            setError('')
+            onUpdateTask(task.taskId, {title:editTitle.trim(), dueDate:editDueDate, priority:editPriority})
             setIsEditing(false)
         }
 
@@ -24,6 +31,7 @@
             setEditDueDate(task.dueDate)
             setEditPriority(task.priority)
             setIsEditing(false)
+            setError('')
         }
 
         return (
@@ -44,6 +52,7 @@
                                     onChange={(e) => setEditTitle(e.target.value)}
                                     className="bg-gray-800 text-white px-2 py-1 rounded mb-1"
                                 />
+                                {error && <p className="text-red-400 text-xs">{error}</p>}
                                 <input
                                     type="date"
                                     value={editDueDate}

@@ -1,10 +1,11 @@
 import type {Task} from "../types.ts";
+import type { TaskUpdate} from "../types.ts";
 import TaskCard from "./TaskCard.tsx"
 interface TaskListProps {
     tasks: Task[]
     onDelete: (taskId: number) => void
     onToggle: (taskId: number) => void
-    onUpdateTask: (taskId: number, updates: { title?: string; dueDate?: string; priority?: 'LOW' | 'MEDIUM' | 'HIGH' }) => void
+    onUpdateTask: (taskId: number, updates: TaskUpdate) => void
 }
 
 function TaskList({ tasks, onDelete, onToggle, onUpdateTask }: TaskListProps) {

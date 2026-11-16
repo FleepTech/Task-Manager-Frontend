@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
+
 import axios from 'axios'
 import './App.css'
 import type { Task } from './types'
+import type { TaskUpdate } from './types'
 import TaskList from "./components/TaskList.tsx";
 import AddTaskForm from "./components/AddTaskForm.tsx";
 
@@ -24,8 +26,10 @@ function App() {
     const handleAddTask = (title:string, dueDate:string, priority: 'LOW' | 'MEDIUM' | 'HIGH') => {
           axios.post(API, {title, dueDate, priority}).then(response => setTasks([...tasks, response.data]))
     }
-    const handleUpdateTask = (taskId: number, updates: { title?: string; dueDate?: string; priority?: 'LOW' | 'MEDIUM' | 'HIGH'}) => {
-      axios.patch(`${API}/${taskId}`, updates).then(response => setTasks(tasks.map(t => t.taskId === taskId ? response.data : t)))
+    const handleUpdateTask = (
+        taskId: number,
+        updates: TaskUpdate) => {
+      axios.put(`${API}/${taskId}`, updates).then(response => setTasks(tasks.map(t => t.taskId === taskId ? response.data : t)))
           .catch(error => console.error(error))
     }
 
